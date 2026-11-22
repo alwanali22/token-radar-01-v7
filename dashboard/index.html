@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Token Radar — unlaunched protocols ranked by implied value</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<header>
+<h1>Token Radar</h1>
+<p class="sub" id="asof-line">Unlaunched protocols, ranked by implied value if they launch a token.</p>
+</header>
+
+<section class="panel" id="summary-panel">
+<h2>What this is</h2>
+<p>Token Radar ranks 198 unlaunched DeFi protocols by the market cap they would plausibly reach if they launched a token, then prices a concrete farm plan for each one. Implied value is TVL times a fitted size multiple (with an infrastructure intercept), times a growth multiplier from the 7-day TVL change, times a seasoning multiplier, times the fitted probability the protocol ever launches a token. No pre-token haircut is applied: no launched/unlaunched pair in this snapshot can fit a discount, so none is invented. Every number on this page is recomputed live in your browser from the same model — open any row and the dialog shows whether the recompute agrees.</p>
+</section>
+
+<section class="panel" id="stats-panel">
+<h2>Snapshot</h2>
+<div class="stats" id="stats"></div>
+</section>
+
+<section class="kpis" id="kpis"></section>
+
+<section class="badges" id="badges" aria-label="Self checks"></section>
+
+<section class="panel controls" aria-label="Filters">
+<div class="ctl">
+<label for="q">Search</label>
+<input id="q" type="search" placeholder="name or slug" autocomplete="off">
+</div>
+<div class="ctl">
+<label for="f-cat">Category</label>
+<select id="f-cat"><option value="">All categories</option></select>
+</div>
+<div class="ctl">
+<label for="f-chain">Chain</label>
+<select id="f-chain"><option value="">All chains</option></select>
+</div>
+<div class="ctl check">
+<label><input id="f-watch" type="checkbox"> Watchlist only</label>
+</div>
+<div class="ctl">
+<label for="f-verdict">Verdict</label>
+<select id="f-verdict">
+<option value="">All verdicts</option>
+<option>FARM</option><option>MARGINAL</option><option>THIN</option><option>SKIP</option>
+</select>
+</div>
+<div class="ctl">
+<label for="f-sort">Sort</label>
+<select id="f-sort">
+<option value="implied">Implied value (high first)</option>
+<option value="net">Farm net (high first)</option>
+<option value="odds">Launch odds (high first)</option>
+<option value="tvl">TVL (high first)</option>
+<option value="name">Name (A to Z)</option>
+</select>
+</div>
+<p class="count" id="row-count"></p>
+</section>
+
+<nav class="tabs" aria-label="Views">
+<button id="tab-board" class="tab active" type="button">Board (198)</button>
+<button id="tab-live" class="tab" type="button">Live tokens (24)</button>
+</nav>
+
+<section id="board-section">
+<div class="table-wrap">
+<table id="board">
+<colgroup><col width=40><col width=196><col width=105><col width=120><col width=72><col width=80><col width=48><col width=90><col width=135><col width=92><col width=66><col width=66><col width=54></colgroup>
+<thead>
+<tr><th>Rank</th><th>Protocol</th><th>Category</th><th>Chains</th><th>TVL</th><th>Implied</th><th>Odds</th><th>If launches</th><th>Range</th><th>Verdict</th><th>Net</th><th>Net/h</th><th>Gas</th></tr>
+</thead>
+<tbody id="board-body"></tbody>
+</table>
+</div>
+</section>
+
+<section id="live-section" hidden>
+<h2>Live tokens (top 24 by market cap)</h2>
+<div class="table-wrap">
+<table id="live-table">
+<thead>
+<tr><th>#</th><th>Protocol</th><th>Category</th><th>Chains</th><th>TVL</th><th>Market cap</th><th>7d</th><th>Listed</th></tr>
+</thead>
+<tbody id="live-body"></tbody>
+</table>
+</div>
+</section>
+
+<section class="panel" id="ledger-section">
+<h2>Ledger — where all 758 protocols went</h2>
+<div id="ledger"></div>
+</section>
+
+<section class="panel" id="farm-section">
+<h2>Farm next — top 5 by net</h2>
+<p class="note">Standard plan: $2,000 deposit, 10% airdrop share, 90-day horizon, 4.5% T-bill rate, 2.7 hours of work per plan. FARM needs net &ge; $25 and net/h &ge; $10.</p>
+<div id="farm-next"></div>
+</section>
+
+<section class="panel" id="scatter-section">
+<h2>Live tokens: TVL vs market cap (log-log)</h2>
+<p class="note">128 live protocols. The line is the fitted size curve for non-infrastructure protocols; the band is the P25–P75 range from the residual spread.</p>
+<div id="scatter"></div>
+</section>
+
+<section class="panel" id="research-note">
+<h2>Research note — what changed in v7, and what is still wrong</h2>
+<p><strong>L1HC — the only model change.</strong> The launch-odds model grew from 9 to 12 features with three grouped flags. <em>High-launch category</em> is 1 for Lending, Dexs, Basis Trading or Yield (full-sample launch rates 0.59–0.79). <em>Low-launch category</em> is 1 for Risk Curators, CEX or Onchain Capital Allocator (rates 0.13–0.31). <em>High-rate chain</em> is 1 when any listed chain is Fantom, Mantle, Polygon, Optimism or Base (rates 0.65–0.81). No low-rate-chain flag: it was tested and rejected. The fitted weights are [0.500, 0.172, 0.171, −0.126, −0.010, −0.224, 0.362, 0.187, 0.145, 0.220, −0.520, 0.412], bias 0.233. The new flags carry the largest single weights after age (+0.220 high-category, −0.520 low-category, +0.412 high-rate-chain), and the 5-fold Brier score improved from 0.2030 to 0.1933, holdout 0.1865 against a 0.2476 base rate. The honest train-only cross-validation is 0.1978, so the full-sample 0.1933 is roughly 0.003–0.005 optimistic from group selection.</p>
+<p><strong>Calibration improved, not solved.</strong> Mean predicted odds against the actual launch rate, by category: Dexs 0.600 vs 0.737 (−0.138) · Lending 0.689 vs 0.787 (−0.098) · Yield 0.504 vs 0.590 (−0.086) · Onchain Capital Allocator 0.229 vs 0.310 (−0.081) · Risk Curators 0.205 vs 0.128 (+0.077) · RWA 0.477 vs 0.515 (−0.038). The worst gap shrank from 0.236 to 0.138, but Dexs is still under-predicted by 0.138 — the model still underestimates the highest-rate categories. Do not read the Brier gain as calibration solved.</p>
+<p><strong>Polymarket at 0.824 is one chain effect, not proof.</strong> Rank 1 is polymarket-international at $51.89M implied with odds 0.824. Most of that odds jump comes from the Polygon high-rate-chain flag (weight +0.412) plus its category and size — a single chain flag, not fundamental evidence that Polymarket will launch. Treat the rank as a screening signal, not a prediction about one company.</p>
+<p><strong>Farm verdicts are slice-sensitive.</strong> The standard plan deposits $2,000. At a $1,000 deposit the board has 0 FARM rows; at $5,000 it has 31. The 14 FARM verdicts are a property of the $2,000 slice, not of the protocols alone. Rank 1 polymarket-international is only MARGINAL as a farm (net +$7.92, +$2.93/h) — its TVL is too large for a $2,000 slice to earn a meaningful share. The top farm by net is metalx-swap at +$53.12 (+$19.67/h).</p>
+<p><strong>Tested and rejected, not forgotten.</strong> L2 interaction terms cannibalised the main effects. L3 strict labelling cut implied value by about 60% and left FARM at 0. L5 TVL-weighted value fitting made the walk-forward miss worse (2.66 to 4.22). Growth as an odds feature did not move the top odds and its weight was unstable. None of these is retested here.</p>
+<p><strong>What the backtests actually say.</strong> Value: 5-fold CV miss 2.93x against a flat-multiple 5.36x; leave-one-out 2.87x against 5.11x; walk-forward misses 2.66x / 2.73x / 3.26x with P25–P75 hold rates 54.9% / 51.2% / 48.4%. The curve slope bootstrap gives p25 −0.602, p75 −0.471. The model beats a flat multiple everywhere, and still misses by roughly a factor of three out of sample — the range column, not the point estimate, is the honest number.</p>
+</section>
+
+<section class="panel" id="model-panel">
+<h2>Model</h2>
+<div id="model-body"></div>
+</section>
+
+<div class="dialog-backdrop" id="dialog-backdrop" hidden>
+<div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dlg-title">
+<div class="dlg-head">
+<h2 id="dlg-title">Protocol</h2>
+<button id="dlg-close" type="button">Close</button>
+</div>
+<div id="dlg-body"></div>
+</div>
+</div>
+
+<script src="../data.js"></script>
+<script src="model.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
