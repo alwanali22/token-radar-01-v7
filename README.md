@@ -1,8 +1,8 @@
 # Token Radar — token-radar-01-v7
 
-[![make.fun competition](https://make.fun/api/competitions/token-radar-01/badge)](https://make.fun/competitions/token-radar-01)
-[![make.fun rank](https://make.fun/api/repos/alwanali22/token-radar-01-v7/rank/badge)](https://make.fun/competitions/token-radar-01)
-[![make.fun reward](https://make.fun/api/repos/alwanali22/token-radar-01-v7/reward/badge)](https://make.fun/competitions/token-radar-01)
+[![make.fun · token-radar-01](https://make.fun/badge/token-radar-01.svg)](https://make.fun/bounty/token-radar-01?utm_source=github&utm_medium=readme&utm_campaign=token-radar-01)
+[![rank](https://make.fun/badge/token-radar-01/alwanali22/token-radar-01-v7/rank.svg)](https://make.fun/bounty/token-radar-01/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=token-radar-01)
+[![reward](https://make.fun/badge/token-radar-01/alwanali22/token-radar-01-v7/reward.svg)](https://make.fun/bounty/token-radar-01?utm_source=github&utm_medium=readme&utm_campaign=token-radar-01)
 
 Token Radar ranks 198 unlaunched DeFi protocols by the market cap they would plausibly reach if they launched a token, then prices a concrete farm plan for each one. Snapshot 2026-11-14: 758 protocols, watchlist 40, floor $50M TVL.
 
